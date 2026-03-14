@@ -31,7 +31,7 @@
 		<kotlin.version>1.9.25</kotlin.version>
 	</properties>
 	<dependencies>
-		
+
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-reflect</artifactId>
