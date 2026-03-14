@@ -10,9 +10,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import pt.unl.fct.iadi.bookstore.controller.dto.BookResponse
 import pt.unl.fct.iadi.bookstore.controller.dto.CreateBookRequest
 import pt.unl.fct.iadi.bookstore.domain.Book
-import pt.unl.fct.iadi.bookstore.domain.Review
 
 import pt.unl.fct.iadi.bookstore.controller.dto.PatchBookRequest
+import pt.unl.fct.iadi.bookstore.controller.dto.ReviewResponse
+import  pt.unl.fct.iadi.bookstore.domain.Review
+import pt.unl.fct.iadi.bookstore.controller.dto.CreateReviewRequest
 
 
 import pt.unl.fct.iadi.bookstore.service.BookstoreService
@@ -71,5 +73,22 @@ class BookstoreController(private val service: BookstoreService) : BookstoreAPI 
 
         return ResponseEntity.noContent().build()
     }
+
+    override fun listBookReviews(isbn: String): ResponseEntity<List<ReviewResponse>> {
+
+        val reviews = service.getReviews(isbn).map { it.toResponse()}
+
+        return ResponseEntity.ok(reviews)
+    }
+
+    override fun createReview(isbn: String, request: CreateReviewRequest): ResponseEntity<Unit> {
+        val review = service.createReview(isbn, request)
+        val location = ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(review.id)
+            .toUri()
+        return ResponseEntity.created(location).build()
+    }
+
 }
 

@@ -8,3 +8,4 @@ data class BookResponse(
     val price: Double,
     val image: String
 )
+

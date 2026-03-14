@@ -1,14 +1,15 @@
 package pt.unl.fct.iadi.bookstore.domain
 
 import io.swagger.v3.oas.annotations.media.Schema
-import java.util.UUID
+import pt.unl.fct.iadi.bookstore.controller.dto.ReviewResponse
+
 
 data class Review(
     @field:Schema(
         description = "Unique identifier for the review",
         example = "123e4567-e89b-12d3-a456-426614174000"
     )
-    val id: UUID,
+    val id: String,
 
     @field:Schema(
         description = "Rating of the book, must be between 1 and 5",
@@ -23,5 +24,13 @@ data class Review(
         example = "Great book on Kotlin programming!",
         maxLength = 500
     )
-    val comment: String?,
+    val comment: String,
 )
+{
+    fun toResponse() = ReviewResponse(
+        id,
+        rating,
+        comment
+    )
+
+}

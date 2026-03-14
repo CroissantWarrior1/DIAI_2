@@ -22,6 +22,9 @@ import pt.unl.fct.iadi.bookstore.controller.dto.CreateBookRequest
 import pt.unl.fct.iadi.bookstore.domain.Book
 import pt.unl.fct.iadi.bookstore.controller.dto.BookResponse
 import pt.unl.fct.iadi.bookstore.controller.dto.PatchBookRequest
+import pt.unl.fct.iadi.bookstore.controller.dto.ReviewResponse
+
+import pt.unl.fct.iadi.bookstore.controller.dto.CreateReviewRequest
 
 @Tag(name = "Bookstore API", description = "the bookstore API")
 interface BookstoreAPI {
@@ -159,5 +162,33 @@ interface BookstoreAPI {
     ): ResponseEntity<Unit>
 
 
+    @Operation(
+        summary = "List reviews for a book",
+        operationId = "listBookReviews",
+        tags = ["review"]
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "List of reviews retrieved successfully"),
+            ApiResponse(responseCode = "404", description = "Book not found")
+        ]
+    )
+    @RequestMapping(
+        value = ["/books/{isbn}/reviews"],
+        produces = ["application/json"],
+        method = [RequestMethod.GET]
+    )
+    fun listBookReviews(
+        @Parameter(description = "ISBN of the book to list reviews for", required = true)
+        @PathVariable isbn: String
+    ): ResponseEntity<List<ReviewResponse>>
+
+
+    @Operation
+    fun createReview(
+        @Parameter(description = "ISBN of the book to add a review for", required = true)
+        @PathVariable isbn: String,
+        @Valid @RequestBody request: CreateReviewRequest
+    ): ResponseEntity<Unit>
 
 }

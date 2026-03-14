@@ -5,6 +5,12 @@ import pt.unl.fct.iadi.bookstore.controller.dto.CreateBookRequest
 import pt.unl.fct.iadi.bookstore.domain.Book
 
 import pt.unl.fct.iadi.bookstore.controller.dto.BookNotFoundException
+import pt.unl.fct.iadi.bookstore.domain.Review
+
+import pt.unl.fct.iadi.bookstore.controller.dto.CreateReviewRequest
+
+// UUID
+import java.util.UUID
 
 @Service
 class BookstoreService {
@@ -24,6 +30,11 @@ class BookstoreService {
             price = 39.99,
             image = "https://example.com/cover2.jpg"
         )
+    )
+
+    var reviews: MutableMap<String, List<String>> = mutableMapOf(
+        "9780134685991" to listOf("Great book on Java best practices!", "A must-read for Java developers."),
+        "9781491950357" to listOf("Excellent introduction to Kotlin.", "Very helpful for learning Kotlin.")
     )
 
 
@@ -51,4 +62,23 @@ class BookstoreService {
             throw BookNotFoundException(isbn)
 
     }
+
+    fun getReviews(isbn: String): List<Review> {
+
+        val reviews = reviews[isbn] ?: throw BookNotFoundException(isbn)
+        return listOf(Review("9780134685991", 5, "Great book on Java best practices!"), Review("9780134685991", 4, "A must-read for Java developers."))
+    }
+
+    fun createReview(isbn: String, request: CreateReviewRequest): Review {
+        getBook(isbn) ?: throw BookNotFoundException(isbn)
+
+        val review = Review(
+            id = UUID.randomUUID().toString(),
+            rating = request.rating,
+            comment = request.comment ?: ""
+        )
+
+        return review
+    }
+
 }
