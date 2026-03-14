@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service
 import pt.unl.fct.iadi.bookstore.controller.dto.CreateBookRequest
 import pt.unl.fct.iadi.bookstore.domain.Book
 
+import pt.unl.fct.iadi.bookstore.controller.dto.BookNotFoundException
+
 @Service
 class BookstoreService {
 
@@ -29,14 +31,24 @@ class BookstoreService {
     fun createBook(book: Book): Book {
 
         if (books.putIfAbsent(book.isbn, book) != null)
-//                throw BookAlreadyExistsException(book.isbn)
-            throw IllegalArgumentException("Book with ISBN ${book.isbn} already exists")
+                throw BookAlreadyExistsException(book.isbn)
 
-//            add to list
-        books[book.isbn] = book
         return book
     }
 
     fun listBooks(): List<Book> =
         books.values.sortedBy { it.isbn }
+
+    fun replaceBook(isbn: String, book: Book): Pair<Book, Boolean> {
+        val created = books.put(isbn, book) == null
+        return book to created
+    }
+    fun getBook(isbn: String): Book? =
+        books[isbn]
+
+    fun deleteBook(isbn: String) {
+        if (books.remove(isbn) == null)
+            throw BookNotFoundException(isbn)
+
+    }
 }
