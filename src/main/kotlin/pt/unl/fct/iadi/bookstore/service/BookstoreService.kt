@@ -15,22 +15,7 @@ import java.util.UUID
 @Service
 class BookstoreService {
 
-    var books: MutableMap<String, Book> = mutableMapOf(
-        "9780134685991" to Book(
-            isbn = "9780134685991",
-            title = "Effective Java",
-            author = "Joshua Bloch",
-            price = 29.99,
-            image = "https://example.com/cover.jpg"
-        ),
-        "9781491950357" to Book(
-            isbn = "9781491950357",
-            title = "Kotlin in Action",
-            author = "Dmitry Jemerov and Svetlana Isakova",
-            price = 39.99,
-            image = "https://example.com/cover2.jpg"
-        )
-    )
+    var books: MutableMap<String, Book> = mutableMapOf()
 
     var reviews: MutableMap<String, List<String>> = mutableMapOf(
         "9780134685991" to listOf("Great book on Java best practices!", "A must-read for Java developers."),
@@ -66,7 +51,9 @@ class BookstoreService {
     fun getReviews(isbn: String): List<Review> {
 
         val reviews = reviews[isbn] ?: throw BookNotFoundException(isbn)
-        return listOf(Review("9780134685991", 5, "Great book on Java best practices!"), Review("9780134685991", 4, "A must-read for Java developers."))
+        return listOf(Review("9780134685991", 5,
+            "Great book on Java best practices!"), Review("9780134685991", 4,
+            "A must-read for Java developers."))
     }
 
     fun createReview(isbn: String, request: CreateReviewRequest): Review {
