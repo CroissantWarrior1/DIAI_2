@@ -184,11 +184,53 @@ interface BookstoreAPI {
     ): ResponseEntity<List<ReviewResponse>>
 
 
-    @Operation
+    @Operation(
+        summary = "Create a review for a book",
+        operationId = "createReview",
+        tags = ["review"]
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "201", description = "Review created successfully"),
+            ApiResponse(responseCode = "400", description = "Validation error"),
+            ApiResponse(responseCode = "404", description = "Book not found")
+        ]
+    )
+    @RequestMapping(
+        value = ["/books/{isbn}/reviews"],
+        consumes = ["application/json"],
+        method = [RequestMethod.POST]
+    )
     fun createReview(
         @Parameter(description = "ISBN of the book to add a review for", required = true)
         @PathVariable isbn: String,
         @Valid @RequestBody request: CreateReviewRequest
     ): ResponseEntity<Unit>
+
+
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Review replaced successfully"),
+            // 201 removed — spec forbids upsert; missing review must 404
+            ApiResponse(responseCode = "400", description = "Validation error"),
+            ApiResponse(responseCode = "404", description = "Book or review not found")
+        ]
+    )
+    @RequestMapping(
+        value = ["/books/{isbn}/reviews/{reviewId}"],
+        consumes = ["application/json"],
+        produces = ["application/json"],
+        method = [RequestMethod.PUT]
+    )
+    fun replaceReview(
+        @Parameter(description = "ISBN of the book", required = true)
+        @PathVariable isbn: String,
+        @Parameter(description = "ID of the review to replace", required = true)
+        @PathVariable reviewId: String,
+        @Valid @RequestBody request: CreateReviewRequest
+    ): ResponseEntity<ReviewResponse>
+
+
+
 
 }

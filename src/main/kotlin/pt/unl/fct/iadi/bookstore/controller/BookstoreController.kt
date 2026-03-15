@@ -90,5 +90,15 @@ class BookstoreController(private val service: BookstoreService) : BookstoreAPI 
         return ResponseEntity.created(location).build()
     }
 
+    override fun replaceReview(
+        isbn: String,
+        reviewId: String,
+        request: CreateReviewRequest
+    ): ResponseEntity<ReviewResponse> {
+
+        return ResponseEntity.ok(service.createReview(isbn, request).toResponse())
+
+    }
+
 }
 
